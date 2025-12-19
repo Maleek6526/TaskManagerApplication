@@ -6,7 +6,24 @@ require('dotenv').config()
 const { PrismaClient } = require('@prisma/client')
 
 const app = express()
-app.use(cors({ origin: '*' }))
+
+// Use env-driven CORS origin(s) to avoid hardcoding
+const allowedOrigins = (process.env.CORS_ORIGIN || '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean)
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow non-browser requests (no Origin header)
+    if (!origin) return callback(null, true)
+    if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+      return callback(null, true)
+    }
+    return callback(new Error('Not allowed by CORS'))
+  },
+}))
+
 app.use(express.json())
 
 // Health check: always reports service readiness

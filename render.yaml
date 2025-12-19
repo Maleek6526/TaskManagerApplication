@@ -21,6 +21,8 @@ services:
         sync: false
       - key: USER_PASSWORD
         sync: false
+      - key: CORS_ORIGIN
+        sync: false
 
   - type: static
     name: taskmanager-ui
