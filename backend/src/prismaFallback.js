@@ -5,10 +5,14 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
 const USER_USERNAME = process.env.USER_USERNAME
 const USER_PASSWORD = process.env.USER_PASSWORD
 
-const users = [
-  { id: 1, username: ADMIN_USERNAME, passwordHash: bcrypt.hashSync(ADMIN_PASSWORD, 10), role: 'ADMIN' },
-  { id: 2, username: USER_USERNAME, passwordHash: bcrypt.hashSync(USER_PASSWORD, 10), role: 'USER' },
-]
+// Build users only if credentials are provided to avoid crashes
+const users = []
+if (ADMIN_USERNAME && ADMIN_PASSWORD) {
+  users.push({ id: 1, username: ADMIN_USERNAME, passwordHash: bcrypt.hashSync(ADMIN_PASSWORD, 10), role: 'ADMIN' })
+}
+if (USER_USERNAME && USER_PASSWORD) {
+  users.push({ id: users.length ? Math.max(...users.map(u => u.id)) + 1 : 2, username: USER_USERNAME, passwordHash: bcrypt.hashSync(USER_PASSWORD, 10), role: 'USER' })
+}
 
 let tasks = []
 let activityLogs = []
