@@ -7,11 +7,16 @@ import swal from 'sweetalert'
 function LoginForm({ onLogin }) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
   async function handleLogin(e) {
     e.preventDefault()
+    if (!username.trim() || !password.trim()) {
+      setError('Username and password are required')
+      return
+    }
     setLoading(true)
     setError('')
     try {
@@ -31,9 +36,26 @@ function LoginForm({ onLogin }) {
       <label htmlFor="login-username" className="text-sm sm:text-base">Username</label>
       <input id="login-username" className="input" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
       <label htmlFor="login-password" className="text-sm sm:text-base">Password</label>
-      <input id="login-password" className="input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+      <div className="relative">
+        <input
+          id="login-password"
+          className="input pr-10"
+          type={showPassword ? 'text' : 'password'}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+        />
+        <button
+          type="button"
+          aria-label={showPassword ? 'Hide password' : 'Show password'}
+          className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-neutral-300 hover:text-neutral-100"
+          onClick={() => setShowPassword((v) => !v)}
+        >
+          {showPassword ? '🙈' : '👁️'}
+        </button>
+      </div>
       {error && <div className="text-red-400 text-sm">{error}</div>}
-      <button type="submit" className="btn btn-primary" disabled={loading}>
+      <button type="submit" className="btn btn-primary" disabled={loading || !username.trim() || !password.trim()}>
         {loading ? 'Logging in…' : 'Login'}
       </button>
     </form>
@@ -55,9 +77,9 @@ function AddTaskForm({ onAdd, submitting }) {
   return (
     <form onSubmit={handleSubmit} className="card space-y-3">
       <h3 className="font-semibold text-lg sm:text-xl">Add Task</h3>
-      <input className="input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" />
-      <textarea className="input" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" />
-      <button type="submit" className="btn btn-primary" disabled={submitting}>{submitting ? 'Saving…' : 'Save'}</button>
+      <input className="input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title (required)" />
+      <textarea className="input" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description (optional)" />
+      <button type="submit" className="btn btn-primary" disabled={submitting || !title.trim()}>{submitting ? 'Saving…' : 'Save'}</button>
     </form>
   )
 }
@@ -67,6 +89,7 @@ const TaskItem = memo(function TaskItem({ task, canDelete, onSave, onComplete, o
   const [form, setForm] = useState({ title: task.title, description: task.description })
 
   async function handleSave() {
+    if (!form.title.trim()) return
     await onSave({ ...task, ...form })
     setEditing(false)
   }
@@ -79,10 +102,10 @@ const TaskItem = memo(function TaskItem({ task, canDelete, onSave, onComplete, o
     <div className="card space-y-2">
       {editing ? (
         <div className="space-y-2">
-          <input className="input" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-          <textarea className="input" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+          <input className="input" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="Title (required)" />
+          <textarea className="input" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Description (optional)" />
           <div className="flex flex-wrap gap-2">
-            <button className="btn btn-primary" aria-label="Save task" onClick={handleSave}>Save</button>
+            <button className="btn btn-primary" aria-label="Save task" onClick={handleSave} disabled={!form.title.trim()}>Save</button>
             <button className="btn btn-secondary" aria-label="Cancel edit" onClick={() => setEditing(false)}>Cancel</button>
           </div>
         </div>

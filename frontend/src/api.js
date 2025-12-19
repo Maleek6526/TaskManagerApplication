@@ -1,5 +1,27 @@
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
+// Detect hard reloads and clear auth to force login screen
+function isHardReload() {
+  try {
+    const entries = typeof performance.getEntriesByType === 'function'
+      ? performance.getEntriesByType('navigation')
+      : [];
+    if (entries && entries[0] && entries[0].type) return entries[0].type === 'reload';
+    if (performance && performance.navigation && typeof performance.navigation.type === 'number') {
+      return performance.navigation.type === 1; // legacy API: 1 = reload
+    }
+    return false;
+  } catch {
+    return false;
+  }
+}
+
+if (isHardReload()) {
+  localStorage.removeItem('token');
+  localStorage.removeItem('role');
+  localStorage.removeItem('username');
+}
+
 function getToken() {
   return localStorage.getItem('token') || '';
 }
