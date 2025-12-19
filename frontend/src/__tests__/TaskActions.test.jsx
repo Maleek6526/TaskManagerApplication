@@ -7,10 +7,10 @@ import { setupServer } from 'msw/node'
 import { http, HttpResponse } from 'msw'
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL
-const ADMIN_USERNAME = import.meta.env.VITE_ADMIN_USERNAME
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD
-const USER_USERNAME = import.meta.env.VITE_USER_USERNAME
-const USER_PASSWORD = import.meta.env.VITE_USER_PASSWORD
+const ADMIN_USERNAME = import.meta.env.VITE_ADMIN_USERNAME || 'admin'
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123'
+const USER_USERNAME = import.meta.env.VITE_USER_USERNAME || 'user'
+const USER_PASSWORD = import.meta.env.VITE_USER_PASSWORD || 'user123'
 
 let tasks = [
   { id: 1, title: 'Initial', description: 'Seeded', completed: false, createdBy: { username: ADMIN_USERNAME || 'admin' } },
