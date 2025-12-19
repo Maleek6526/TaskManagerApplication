@@ -81,3 +81,7 @@ Frontend:
 ## Notes
 - Activity Log UI supports date grouping and client‑side pagination for long lists.
 - Prisma `relationMode = "prisma"` ensures compatibility with PlanetScale (no FKs).
+
+
+## Live Testing 
+- https://taskmanageruiapplication.onrender.com
