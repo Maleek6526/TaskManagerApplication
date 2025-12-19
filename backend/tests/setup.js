@@ -9,10 +9,10 @@ dotenv.config({ path: path.resolve(__dirname, '..', '.env') })
 jest.mock('@prisma/client', () => {
   const bcrypt = require('bcrypt')
 
-  const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin'
-  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123'
-  const USER_USERNAME = process.env.USER_USERNAME || 'user'
-  const USER_PASSWORD = process.env.USER_PASSWORD || 'user123'
+  const ADMIN_USERNAME = process.env.ADMIN_USERNAME
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
+  const USER_USERNAME = process.env.USER_USERNAME
+  const USER_PASSWORD = process.env.USER_PASSWORD
 
   const users = [
     { id: 1, username: ADMIN_USERNAME, passwordHash: bcrypt.hashSync(ADMIN_PASSWORD, 10), role: 'ADMIN' },

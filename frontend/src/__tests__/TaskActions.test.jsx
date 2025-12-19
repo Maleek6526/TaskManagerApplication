@@ -7,13 +7,13 @@ import { setupServer } from 'msw/node'
 import { http, HttpResponse } from 'msw'
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL
-const ADMIN_USERNAME = import.meta.env.VITE_ADMIN_USERNAME || 'admin'
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123'
-const USER_USERNAME = import.meta.env.VITE_USER_USERNAME || 'user'
-const USER_PASSWORD = import.meta.env.VITE_USER_PASSWORD || 'user123'
+const ADMIN_USERNAME = import.meta.env.VITE_ADMIN_USERNAME
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD
+const USER_USERNAME = import.meta.env.VITE_USER_USERNAME
+const USER_PASSWORD = import.meta.env.VITE_USER_PASSWORD
 
 let tasks = [
-  { id: 1, title: 'Initial', description: 'Seeded', completed: false, createdBy: { username: ADMIN_USERNAME || 'admin' } },
+  { id: 1, title: 'Initial', description: 'Seeded', completed: false, createdBy: { username: ADMIN_USERNAME} },
 ]
 
 const server = setupServer(
@@ -31,7 +31,7 @@ const server = setupServer(
   http.post(`${API_BASE}/tasks`, async ({ request }) => {
     const body = await request.json()
     const nextId = tasks.length ? Math.max(...tasks.map(t => t.id)) + 1 : 1
-    const created = { id: nextId, completed: false, createdBy: { username: ADMIN_USERNAME || 'admin' }, ...body }
+    const created = { id: nextId, completed: false, createdBy: { username: ADMIN_USERNAME}, ...body }
     tasks = [created, ...tasks]
     return HttpResponse.json(created)
   }),
@@ -55,7 +55,7 @@ afterAll(() => server.close())
 beforeEach(() => {
   localStorage.clear()
   tasks = [
-    { id: 1, title: 'Initial', description: 'Seeded', completed: false, createdBy: { username: ADMIN_USERNAME || 'admin' } },
+    { id: 1, title: 'Initial', description: 'Seeded', completed: false, createdBy: { username: ADMIN_USERNAME} },
   ]
 })
 
